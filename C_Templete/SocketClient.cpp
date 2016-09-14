@@ -12,6 +12,7 @@ using namespace std;
 SOCKET sclient;
 sockaddr_in serAddr;
 string ReceiveContent = "None";
+
 void SocketClient::WinWSAUp() {
 	WORD sockVersion = MAKEWORD(2, 2);
 	WSADATA data;
@@ -43,9 +44,11 @@ string SocketClient::GetReceive() {
 	if (ret > 0)
 	{
 		recData[ret] = 0x00;
-		return recData;
-
 	}
+	else {
+		return "Not found Receive";
+	}
+	return string(recData);
 }
 void SocketClient::CloseConnect() {
 	closesocket(sclient);
@@ -61,14 +64,12 @@ void SocketClient::CreatConnect(string sendData) {
 	{
 		printf("connect error !");
 		closesocket(sclient);
-		system("Pause");
-		//return 1;
+		system("Pause");;
 	}
-
-
-	//string new_data = to_string(i)+"."+sendData +"\n";
-	string new_data = "From C++ Client:" + sendData + "\n";
-	send(sclient, new_data.c_str(), strlen(new_data.c_str()), 0);
+	else{
+		string new_data = "From C++ Client:" + sendData + "\n";
+		send(sclient, new_data.c_str(), strlen(new_data.c_str()), 0);
+	}
 }
 
 void SocketClient::SendData(string IP_addr, int Port,string content)

@@ -19,7 +19,7 @@ public:
 
 
 	void SendData(string IP_addr, int Port, string content);
-	
+	void SendLoopData(string IP_addr, int Port, string content);
 	
 protected:
 
@@ -27,7 +27,7 @@ private:
 	
 	SOCKET sclient;
 	sockaddr_in serAddr;
-	void CreatConnect(string sendData);
+	void CreatConnect();
 	void CloseConnect();
 	string GetReceive();
 
@@ -35,6 +35,7 @@ private:
 	void TCPClient_initialization();	
 	void WinWSAdown();
 	void WinWSAUp();
+	void push(string sendData);
 };
 
 

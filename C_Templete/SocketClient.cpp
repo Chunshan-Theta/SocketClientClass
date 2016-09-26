@@ -7,8 +7,6 @@
 
 using namespace std;
 
-
-
 SOCKET sclient;
 sockaddr_in serAddr;
 string ReceiveContent = "None";
@@ -26,7 +24,7 @@ void SocketClient::WinWSAdown() {
 	WSACleanup();
 }
 void SocketClient::TCPClient_initialization() {
-	SOCKET sclient = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	sclient = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (sclient == INVALID_SOCKET)
 	{
 
@@ -57,21 +55,28 @@ void SocketClient::CloseConnect() {
 	//system("Pause");
 	//printf("Next Step\n");
 }
-void SocketClient::CreatConnect(string sendData) {
-
-	sclient = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+void SocketClient::CreatConnect() {
+	
 	if (connect(sclient, (sockaddr*)&serAddr, sizeof(serAddr)) == SOCKET_ERROR)
 	{
 		printf("connect error !");
 		closesocket(sclient);
-		system("Pause");;
+		system("Pause");
 	}
-	else{
-		string new_data = "From C++ Client:" + sendData + "\n";
-		send(sclient, new_data.c_str(), strlen(new_data.c_str()), 0);
+	else
+	{
+		printf("connect OK !");
 	}
-}
 
+	
+}
+void SocketClient::push(string sendData) {
+	
+	//string new_data = "From C++ Client:" + sendData + "\n";
+	string new_data = sendData;
+	send(sclient, new_data.c_str(), strlen(new_data.c_str()), 0);	
+
+}
 void SocketClient::SendData(string IP_addr, int Port,string content)
 {
 #ifdef _WIN32
@@ -82,7 +87,8 @@ void SocketClient::SendData(string IP_addr, int Port,string content)
 
 	SetTargetServer(IP_addr, Port);
 
-	CreatConnect(content);					
+	CreatConnect();
+	push(content);
 	ReceiveContent = GetReceive();
 		
 		
@@ -93,6 +99,39 @@ void SocketClient::SendData(string IP_addr, int Port,string content)
 #endif
 	
 	
+}
+void SocketClient::SendLoopData(string IP_addr, int Port, string content)
+{
+#ifdef _WIN32
+	WinWSAUp();
+#endif
+	
+	TCPClient_initialization();
+
+	SetTargetServer(IP_addr, Port);
+
+	CreatConnect();
+	int i = 1;
+	while(TRUE){
+		cout << "push" << endl;
+		push(content+to_string(i));
+		cout << "Get Receive" << endl;
+		ReceiveContent = GetReceive();
+		cout << ReceiveContent << endl;
+		Sleep(1000);
+		i=i+1;
+
+	}
+	
+
+
+	CloseConnect();
+
+#ifdef _WIN32
+	WinWSAdown();
+#endif
+
+
 }
 SocketClient::SocketClient() {//create
 	//cout <<"TCP Start!"<<endl;

@@ -7,14 +7,15 @@ int main() {
 	
 	SocketClient a;
 	
-	
-	for (int i = 0; i < 10; i++) {
+	/*
+	for (int i = 1; i > 0; i++) {
 		a.SendData("192.168.1.150", 27015, "hello!!! TCP Server"+to_string(i));		
-		cout << a.ReceiveContent << endl;
+		cout << " Server : " << a.ReceiveContent << endl;
 		
-		Sleep(2000);
+		Sleep(1000);
 	}
-	cout << a.ReceiveContent << endl;
+	*/
+	a.SendLoopData("192.168.1.150", 27015, "hello!!! TCP Server" );
 	system("Pause");
 
 	return 0;
